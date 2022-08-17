@@ -5,13 +5,13 @@ import (
 )
 
 type User struct {
-	ID 			int
-	Name 		string
-	Occupation 	string
-	Email 		string
-	Password 	string
-	Avatar 		string
-	Role 		string
-	CreatedAt 	time.Time
-	UpdatedAt 	time.Time
+	ID         int       `json:"id" gorm:"primary_key"`
+	Name       string    `json:"name"`
+	Occupation string    `json:"occupation"`
+	Email      string    `json:"email"`
+	Password   string    `json:"password"`
+	Avatar     string    `json:"avatar"`
+	Role       string    `json:"role"`
+	CreatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
+	UpdatedAt  time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }

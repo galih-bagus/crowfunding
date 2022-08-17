@@ -1,6 +1,14 @@
 package helper
 
-import "github.com/go-playground/validator/v10"
+import (
+	"log"
+	"os"
+
+	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
 
 type Response struct {
 	Meta Meta        `json:"meta"`
@@ -36,4 +44,18 @@ func FormatValidationError(err error) []string {
 	}
 
 	return errors
+}
+
+func SetupDB() *gorm.DB {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+	dsn := os.Getenv("URL_DB")
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	return db
 }
