@@ -45,6 +45,7 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	api.POST("/campaigns-images", authMiddleware(authService, userService), campaignHandler.UploadImage)
 
 	api.GET("/campaign/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransaction)
+	api.GET("/transactions", authMiddleware(authService, userService), transactionHandler.GetUserTransaction)
 	return router
 }
 
