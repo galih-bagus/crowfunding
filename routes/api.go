@@ -5,6 +5,7 @@ import (
 	"bwastartup/campaign"
 	"bwastartup/handler"
 	"bwastartup/helper"
+	"bwastartup/payment"
 	"bwastartup/transaction"
 	"bwastartup/user"
 	"net/http"
@@ -23,8 +24,9 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 
 	userService := user.NewService(userRepository)
 	campaignService := campaign.NewService(campaignRepository)
+	paymentService := payment.NewService()
 	authService := auth.NewService()
-	transactionService := transaction.NewService(transactionRepository, campaignRepository)
+	transactionService := transaction.NewService(transactionRepository, campaignRepository, paymentService)
 
 	userHandler := handler.NewUserHandler(userService, authService)
 	campaignHandler := handler.NewCampaignHandler(campaignService)
@@ -46,6 +48,7 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 
 	api.GET("/campaign/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransaction)
 	api.GET("/transactions", authMiddleware(authService, userService), transactionHandler.GetUserTransaction)
+	api.POST("/transactions", authMiddleware(authService, userService), transactionHandler.Store)
 	return router
 }
 

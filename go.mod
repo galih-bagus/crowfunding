@@ -27,6 +27,7 @@ require (
 	github.com/pkg/errors v0.8.1 // indirect
 	github.com/shopspring/decimal v0.0.0-20180709203117-cd690d0c9e24 // indirect
 	github.com/ugorji/go/codec v1.2.7 // indirect
+	github.com/veritrans/go-midtrans v0.0.0-20210616100512-16326c5eeb00 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/net v0.0.0-20220728211354-c7608f3a8462 // indirect
 	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect

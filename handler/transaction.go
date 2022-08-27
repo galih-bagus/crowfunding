@@ -57,3 +57,31 @@ func (h *transactionHandler) GetUserTransaction(c *gin.Context) {
 	response := helper.APIResponse("Success  get user transaction", http.StatusOK, "success", transaction.FormatUserTransactions(transactions))
 	c.JSON(http.StatusOK, response)
 }
+
+func (h *transactionHandler) Store(c *gin.Context) {
+	var input transaction.CreateTransactionInput
+
+	err := c.ShouldBindJSON(&input)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to store transaction.", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+
+	input.User = currentUser
+
+	newTransaction, err := h.service.StoreTransaction(input)
+	if err != nil {
+		response := helper.APIResponse("Failed to store transaction.", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to store transaction.", http.StatusOK, "success", transaction.FormatTransaction(newTransaction))
+	c.JSON(http.StatusOK, response)
+}
