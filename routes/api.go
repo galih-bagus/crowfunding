@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -32,6 +33,7 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	campaignHandler := handler.NewCampaignHandler(campaignService)
 	transactionHandler := handler.NewTransactionHandler(transactionService)
 	router := gin.Default()
+	router.Use(cors.Default())
 
 	api := router.Group("/api/v1")
 
@@ -39,6 +41,7 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	api.POST("/login", userHandler.Login)
 	api.POST("/check-email", userHandler.CheckEmailAvailability)
 	api.POST("/avatars", authMiddleware(authService, userService), userHandler.UploadAvatar)
+	api.POST("/user-fetch", authMiddleware(authService, userService), userHandler.FetchUser)
 
 	api.GET("/campaigns", campaignHandler.GetCampaigns)
 	api.GET("/campaigns/:id", campaignHandler.GetCampaignDetail)
@@ -49,6 +52,8 @@ func SetupRoutes(db *gorm.DB) *gin.Engine {
 	api.GET("/campaign/:id/transactions", authMiddleware(authService, userService), transactionHandler.GetCampaignTransaction)
 	api.GET("/transactions", authMiddleware(authService, userService), transactionHandler.GetUserTransaction)
 	api.POST("/transactions", authMiddleware(authService, userService), transactionHandler.Store)
+	api.POST("/transactions/notification", transactionHandler.GetNotification)
+
 	return router
 }
 
